@@ -1,6 +1,8 @@
 import { type UserDocument } from "../../models/User.js"
-import { type Filter } from "mongodb";
 
 export interface UserRepositoryInterface {
-  create(user: Partial<UserDocument>): Promise<UserDocument>;
+  findByEmail(email: string): Promise<UserDocument | null>
+  findByUsername(username: string): Promise<UserDocument | null>
+  findByEmailOrUsername(identifier: string): Promise<UserDocument | null>
+  create(user: UserDocument): Promise<UserDocument>;
 }

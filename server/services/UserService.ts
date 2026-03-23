@@ -1,33 +1,31 @@
 import type { UserServiceInterface } from "../interfaces/service/UserServiceInterface.js";
-import type { UserRepository } from "../repositories/UserRepository.js";
-import { User, type UserDocument } from "../models/User.js";
+import { UserRepository } from "../repositories/UserRepository.js";
+import { type UserDocument } from "../models/User.js";
 
 export class UserService implements UserServiceInterface {
   constructor(private userRepository: UserRepository) { }
 
-  async register(data: Partial<UserDocument>): Promise<UserDocument> {
-    if (!data.email || !data.password || !data.username) {
-      throw new Error("All fields are required");
-    }
-
-    const existing = await User.findOne({
-      $or: [
-        { email: data.email },
-        { username: data.username }
-      ]
-    });
-
-    if (existing) {
-      if (existing.email === data.email) {
-        throw new Error("Email already exists");
-      }
-      if (existing.username === data.username) {
-        throw new Error("Username already exists");
-      }
-    }
-
+  async register(data: UserDocument): Promise<UserDocument> {
     try {
-      return await this.userRepository.create(data);
+      const existingEmail = await this.userRepository.findByEmail(data.email);
+      if (existingEmail) {
+        throw {
+          type: "validation",
+          errors: [{ msg: "Email already exists", path: "email" }]
+        };
+      }
+
+      const existingUsername = await this.userRepository.findByUsername(data.username);
+      if (existingUsername) {
+        throw {
+          type: "validation",
+          errors: [{ msg: "Username already exists", path: "username" }]
+        };
+      }
+
+      const user = await this.userRepository.create(data);
+      const { password, ...safeUser } = user.toObject();
+      return safeUser;
     } catch (err: any) {
       throw err;
     }

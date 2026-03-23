@@ -7,7 +7,8 @@
   "scripts": {
     "client": "npm run dev --workspace=client",
     "server": "npm run dev --workspace=server",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "maildev": "npm run maildev --workspace=server",
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run maildev\""
   },
   "workspaces": [
     "client",

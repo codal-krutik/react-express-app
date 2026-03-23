@@ -1,4 +1,4 @@
-import type { Route } from "./+types/account.register";
+import type { Route } from "./+types/account.login";
 import {
   Box,
   Button,
@@ -13,21 +13,19 @@ import axios from "axios";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Register page" },
-    { name: "description", content: "Register page" },
+    { title: "Login page" },
+    { name: "description", content: "Login page" },
   ];
 }
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const [form, setForm] = useState({
-    email: "",
-    username: "",
+    emailOrUsername: "",
     password: "",
   });
 
   const [errors, setErrors] = useState({
-    email: "",
-    username: "",
+    emailOrUsername: "",
     password: "",
   });
 
@@ -45,29 +43,15 @@ export default function RegisterPage() {
 
   const validateForm = () => {
     let valid = true;
-    const newErrors = { email: "", username: "", password: "" };
+    const newErrors = { emailOrUsername: "", password: "" };
 
-    // Basic email validation
-    if (!form.email) {
-      newErrors.email = "Email is required";
-      valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
-      newErrors.email = "Email is invalid";
+    if (!form.emailOrUsername) {
+      newErrors.emailOrUsername = "Email or Username is required";
       valid = false;
     }
 
-    // Username validation
-    if (!form.username) {
-      newErrors.username = "Username is required";
-      valid = false;
-    }
-
-    // Password validation
     if (!form.password) {
       newErrors.password = "Password is required";
-      valid = false;
-    } else if (form.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
       valid = false;
     }
 
@@ -75,14 +59,14 @@ export default function RegisterPage() {
     return valid;
   };
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const isValid = validateForm();
     if (!isValid) return;
 
     try {
-      const response = await axios.post("http://localhost:3000/api/user/register", form, {
+      const response = await axios.post("http://localhost:3000/api/auth/login", form, {
         withCredentials: true,
       });
       console.log(response);
@@ -90,13 +74,17 @@ export default function RegisterPage() {
       if (error.response && error.response.data?.errors) {
         const backendErrors = error.response.data.errors;
 
-        const newErrors = { email: "", username: "", password: "" };
+        const newErrors = { emailOrUsername: "", password: "" };
 
         backendErrors.forEach((err: any) => {
           if (err.path in newErrors) {
             newErrors[err.path as keyof typeof newErrors] = err.msg;
           }
         });
+
+        console.log('backendErrors', backendErrors);
+        console.log('newErrors', newErrors);
+
 
         setErrors(newErrors);
       } else {
@@ -115,31 +103,21 @@ export default function RegisterPage() {
     >
       <Paper elevation={3} sx={{ padding: 4, width: 350 }}>
         <Typography variant="h5" mb={2} textAlign="center">
-          Register
+          Login
         </Typography>
 
         <Box component="form" onSubmit={handleSubmit}>
-          <FormControl fullWidth margin="normal" error={!!errors.email}>
+          <FormControl fullWidth margin="normal" error={!!errors.emailOrUsername}>
             <TextField
-              label="Email"
-              name="email"
-              type="email"
-              value={form.email}
+              label="Email or Username"
+              name="emailOrUsername"
+              value={form.emailOrUsername}
               onChange={handleChange}
               fullWidth
             />
-            {errors.email && <FormHelperText>{errors.email}</FormHelperText>}
-          </FormControl>
-
-          <FormControl fullWidth margin="normal" error={!!errors.username}>
-            <TextField
-              label="Username"
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-              fullWidth
-            />
-            {errors.username && <FormHelperText>{errors.username}</FormHelperText>}
+            {errors.emailOrUsername && (
+              <FormHelperText>{errors.emailOrUsername}</FormHelperText>
+            )}
           </FormControl>
 
           <FormControl fullWidth margin="normal" error={!!errors.password}>
@@ -151,16 +129,13 @@ export default function RegisterPage() {
               onChange={handleChange}
               fullWidth
             />
-            {errors.password && <FormHelperText>{errors.password}</FormHelperText>}
+            {errors.password && (
+              <FormHelperText>{errors.password}</FormHelperText>
+            )}
           </FormControl>
 
-          <Button
-            fullWidth
-            variant="contained"
-            type="submit"
-            sx={{ mt: 2 }}
-          >
-            Register
+          <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
+            Login
           </Button>
         </Box>
       </Paper>
