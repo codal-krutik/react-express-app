@@ -10,6 +10,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { login } from "~/store/authSlice";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -59,6 +62,9 @@ export default function LoginPage() {
     return valid;
   };
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -66,10 +72,11 @@ export default function LoginPage() {
     if (!isValid) return;
 
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/login", form, {
+      const { data } = await axios.post("http://localhost:3000/api/auth/login", form, {
         withCredentials: true,
       });
-      console.log(response);
+      dispatch(login(data));
+      navigate('/');
     } catch (error: any) {
       if (error.response && error.response.data?.errors) {
         const backendErrors = error.response.data.errors;
@@ -81,10 +88,6 @@ export default function LoginPage() {
             newErrors[err.path as keyof typeof newErrors] = err.msg;
           }
         });
-
-        console.log('backendErrors', backendErrors);
-        console.log('newErrors', newErrors);
-
 
         setErrors(newErrors);
       } else {

@@ -8,6 +8,8 @@ import {
 } from "react-router";
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
+import { store } from './store/store';
+import { Provider } from 'react-redux';
 
 import type { Route } from "./+types/root";
 
@@ -34,12 +36,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <CssBaseline />
-        <Container>
-          {children}
-        </Container>
-        <ScrollRestoration />
-        <Scripts />
+        <Provider store={store}>
+          <CssBaseline />
+          <Container>
+            {children}
+          </Container>
+          <ScrollRestoration />
+          <Scripts />
+        </Provider>
       </body>
     </html>
   );

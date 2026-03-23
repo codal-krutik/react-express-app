@@ -9,6 +9,7 @@ import {
   FormControl,
 } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import axios from "axios";
 
 export function meta({ }: Route.MetaArgs) {
@@ -75,6 +76,8 @@ export default function RegisterPage() {
     return valid;
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
 
@@ -82,10 +85,10 @@ export default function RegisterPage() {
     if (!isValid) return;
 
     try {
-      const response = await axios.post("http://localhost:3000/api/user/register", form, {
+      await axios.post("http://localhost:3000/api/user/register", form, {
         withCredentials: true,
       });
-      console.log(response);
+      navigate('/account/login');
     } catch (error: any) {
       if (error.response && error.response.data?.errors) {
         const backendErrors = error.response.data.errors;
