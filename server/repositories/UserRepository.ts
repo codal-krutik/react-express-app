@@ -2,6 +2,10 @@ import type { UserRepositoryInterface } from "../interfaces/repository/UserRepos
 import { User, type UserDocument } from "../models/User.js";
 
 export class UserRepository implements UserRepositoryInterface {
+  async findById(id: string): Promise<UserDocument | null> {
+    return await User.findById(id);
+  }
+
   async findByEmail(email: string): Promise<UserDocument | null> {
     return await User.findOne({ email });
   }

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { UserRepository } from '../repositories/UserRepository.js';
 import { AuthService } from '../services/AuthService.js';
 import { AuthController } from '../controllers/AuthController.js';
+import { authMiddleware } from '../middleware/AuthMiddleware.js';
 import { body } from 'express-validator';
 
 const router = Router();
@@ -9,6 +10,8 @@ const router = Router();
 const userRepository = new UserRepository();
 const authService = new AuthService(userRepository);
 const authController = new AuthController(authService);
+
+router.get("/authenticate", authMiddleware, authController.authenticate);
 
 router.post('/login', [
   body("emailOrUsername")

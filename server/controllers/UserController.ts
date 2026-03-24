@@ -1,5 +1,5 @@
 import type { UserService } from "../services/UserService.js";
-import { type Request, type Response } from "express";
+import type { Request, Response } from "express";
 import { validationResult } from 'express-validator';
 
 export class UserController {

@@ -1,9 +1,10 @@
-import type { Request, Response, NextFunction } from "express";
+import type { Response, NextFunction } from "express";
+import type { AuthRequest } from "../dtos/AuthDTO.js";
 import { verify } from "../utils/jwt.js";
 import jwt from "jsonwebtoken";
 
 export const authMiddleware = (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -16,7 +17,8 @@ export const authMiddleware = (
       });
     }
 
-    verify(token);
+    const decoded = verify(token);
+    req.user = decoded;
 
     next();
   } catch (error: any) {
