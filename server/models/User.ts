@@ -5,6 +5,7 @@ export interface UserDocument extends Document {
   email: string;
   username: string;
   password: string;
+  isEmailVerified: boolean;
 
   comparePassword(userPassword: string): Promise<boolean>;
 }
@@ -32,6 +33,10 @@ const userSchema = new mongoose.Schema<UserDocument>(
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters long"],
       select: false
+    },
+    isEmailVerified: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }

@@ -6,4 +6,5 @@ export interface UserRepositoryInterface {
   findByUsername(username: string): Promise<UserDocument | null>
   findByEmailOrUsername(identifier: string): Promise<UserDocument | null>
   create(user: UserDocument): Promise<UserDocument>;
+  markEmailVerified(userId: string): Promise<UserDocument | null>;
 }

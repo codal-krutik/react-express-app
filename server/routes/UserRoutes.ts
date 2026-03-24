@@ -35,4 +35,21 @@ router.post(
   userController.register
 );
 
+router.post(
+  "/verify-email-otp",
+  [
+    body("email")
+      .isEmail()
+      .withMessage("Please provide a valid email address")
+      .normalizeEmail(),
+    body("otp")
+      .trim()
+      .notEmpty()
+      .withMessage("OTP is required")
+      .isLength({ min: 6, max: 6 })
+      .withMessage("OTP must be 6 digits"),
+  ],
+  userController.verifyEmailOtp
+);
+
 export default router;

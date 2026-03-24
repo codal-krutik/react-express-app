@@ -26,4 +26,8 @@ export class UserRepository implements UserRepositoryInterface {
   async create(user: UserDocument): Promise<UserDocument> {
     return User.create(user);
   }
+
+  async markEmailVerified(userId: string): Promise<UserDocument | null> {
+    return User.findByIdAndUpdate(userId, { isEmailVerified: true }, { new: true });
+  }
 }

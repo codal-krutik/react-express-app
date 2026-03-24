@@ -88,7 +88,7 @@ export default function RegisterPage() {
       await axios.post("http://localhost:3000/api/user/register", form, {
         withCredentials: true,
       });
-      navigate('/account/login');
+      navigate(`/account/verify-otp?email=${encodeURIComponent(form.email)}`);
     } catch (error: any) {
       if (error.response && error.response.data?.errors) {
         const backendErrors = error.response.data.errors;
