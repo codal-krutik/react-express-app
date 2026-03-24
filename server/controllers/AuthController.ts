@@ -21,7 +21,11 @@ export class AuthController {
 
       const user = await this.authService.authenticate(userId);
 
-      return res.status(200).json(user);
+      return res.status(200).json({
+        id: user._id.toString(),
+        email: user.email,
+        username: user.username,
+      });
     } catch (error: any) {
       return res.status(500).json({
         message: error.message,

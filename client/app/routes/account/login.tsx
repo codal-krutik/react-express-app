@@ -1,4 +1,4 @@
-import type { Route } from "./+types/account.login";
+import type { Route } from "../+types/account.login";
 import {
   Box,
   Button,
@@ -12,7 +12,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
-import { login } from "~/store/authSlice";
+import { setAuthenticatedUser } from "~/store/authSlice";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -75,7 +75,7 @@ export default function LoginPage() {
       const { data } = await axios.post("http://localhost:3000/api/auth/login", form, {
         withCredentials: true,
       });
-      dispatch(login(data));
+      dispatch(setAuthenticatedUser(data));
       navigate('/');
     } catch (error: any) {
       if (error.response && error.response.data?.errors) {

@@ -1,4 +1,4 @@
-import type { Route } from "./+types/account.register";
+import type { Route } from "../+types/account.register";
 import {
   Box,
   Button,

@@ -1,7 +1,7 @@
 import type { Route } from "./+types/_index";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import { logout } from "~/store/authSlice";
+import { unsetAuthenticatedUser } from "~/store/authSlice";
 import axios from "axios";
 
 export function meta({ }: Route.MetaArgs) {
@@ -21,7 +21,7 @@ export default function Index() {
         withCredentials: true,
       });
 
-      dispatch(logout());
+      dispatch(unsetAuthenticatedUser());
       navigate("/account/login");
     } catch (error: any) {
       throw error;
