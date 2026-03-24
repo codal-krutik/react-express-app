@@ -1,6 +1,10 @@
 import type { Route } from "./+types/_index";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import { logout } from "~/store/authSlice";
+import axios from "axios";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
     { name: "description", content: "Welcome to React Router!" },
@@ -8,9 +12,26 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Index() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:3000/api/auth/logout", {}, {
+        withCredentials: true,
+      });
+
+      dispatch(logout());
+      navigate("/account/login");
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
   return (
     <>
-      New React Router App
+      <p>New React Router App</p>
+      <button onClick={handleLogout}>Logout</button>
     </>
   );
 }

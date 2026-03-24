@@ -27,6 +27,8 @@ router.post('/login', [
     .withMessage('Password is required')
     .isLength({ min: 6 })
     .withMessage('Password must be at least 6 characters long')
-], authController.login)
+], authController.login);
+
+router.post("/logout", authController.logout);
 
 export default router;

@@ -7,8 +7,10 @@ import {
 import { flatRoutes } from "@react-router/fs-routes";
 
 export default [
-  route("/account/login", "./routes/account.login.tsx"),
-  route("/account/register", "./routes/account.register.tsx"),
+  layout("./layouts/Auth.tsx", [
+    route("/account/login", "./routes/account.login.tsx"),
+    route("/account/register", "./routes/account.register.tsx"),
+  ]),
 
   layout("./layouts/Master.tsx", [
     index("./routes/_index.tsx"),

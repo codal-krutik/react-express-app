@@ -1,27 +1,27 @@
 import { Outlet, redirect } from "react-router";
 import axios from "axios";
-import type { Route } from "./+types/Master";
+import type { Route } from "./+types/Auth";
 
 export async function loader({ request }: Route.LoaderArgs) {
   try {
     const cookie = request.headers.get("cookie") ?? "";
     
-    const { data } = await axios.get("http://localhost:3000/api/auth/authenticate", {
+    await axios.get("http://localhost:3000/api/auth/authenticate", {
       withCredentials: true,
       headers: {
         cookie
       }
     });
 
-    return data;
+    throw redirect("/");
   } catch (error: any) {
     if (error.response?.status === 401) {
-      throw redirect("/account/login");
+      return null;
     }
     throw error;
   }
 }
 
-export default function Master() {
+export default function Auth() {
   return <Outlet />;
 }
