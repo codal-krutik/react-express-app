@@ -3,11 +3,7 @@ import type { AuthRequest } from "../dtos/AuthDTO.js";
 import { verify } from "../utils/jwt.js";
 import jwt from "jsonwebtoken";
 
-export const authMiddleware = (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const token = req.cookies?.token;
 

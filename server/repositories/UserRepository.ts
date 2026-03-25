@@ -16,10 +16,7 @@ export class UserRepository implements UserRepositoryInterface {
 
   async findByEmailOrUsername(identifier: string): Promise<UserDocument | null> {
     return await User.findOne({
-      $or: [
-        { email: identifier },
-        { username: identifier }
-      ]
+      $or: [{ email: identifier }, { username: identifier }],
     }).select("+password");
   }
 

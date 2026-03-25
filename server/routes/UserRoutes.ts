@@ -1,47 +1,43 @@
-import { Router } from 'express';
-import { UserController } from '../controllers/UserController.js';
-import { UserService } from '../services/UserService.js';
-import { UserRepository } from '../repositories/UserRepository.js';
-import { body } from 'express-validator';
+import { Router } from "express";
+import { UserController } from "../controllers/UserController.js";
+import { UserService } from "../services/UserService.js";
+import { UserRepository } from "../repositories/UserRepository.js";
+import { body, query } from "express-validator";
+import { EmailVerification } from "../models/EmailVerification.js";
 
 const router = Router();
 
 const userRepository = new UserRepository();
-const userService = new UserService(userRepository);
+const emailVerificationRepository = new EmailVerification();
+const userService = new UserService(userRepository, emailVerificationRepository);
 const userController = new UserController(userService);
 
 router.post(
-  '/register',
+  "/register",
   [
-    body('email')
-      .isEmail()
-      .withMessage('Please provide a valid email address')
-      .normalizeEmail(),
+    body("email").isEmail().withMessage("Please provide a valid email address").normalizeEmail(),
 
-    body('username')
+    body("username")
       .trim()
       .notEmpty()
-      .withMessage('Username is required')
+      .withMessage("Username is required")
       .isLength({ min: 3, max: 30 })
-      .withMessage('Username must be between 3 and 30 characters'),
+      .withMessage("Username must be between 3 and 30 characters"),
 
-    body('password')
+    body("password")
       .trim()
       .notEmpty()
-      .withMessage('Password is required')
+      .withMessage("Password is required")
       .isLength({ min: 6 })
-      .withMessage('Password must be at least 6 characters long')
+      .withMessage("Password must be at least 6 characters long"),
   ],
-  userController.register
+  userController.register,
 );
 
 router.post(
-  "/verify-email-otp",
+  "/verify-otp",
   [
-    body("email")
-      .isEmail()
-      .withMessage("Please provide a valid email address")
-      .normalizeEmail(),
+    body("email").isEmail().withMessage("Please provide a valid email address").normalizeEmail(),
     body("otp")
       .trim()
       .notEmpty()
@@ -49,7 +45,23 @@ router.post(
       .isLength({ min: 6, max: 6 })
       .withMessage("OTP must be 6 digits"),
   ],
-  userController.verifyEmailOtp
+  userController.verifyEmailOtp,
+);
+
+router.get(
+  "/verify-email",
+  [
+    query("token")
+      .exists({ checkFalsy: true })
+      .withMessage(`Token is required`)
+      .bail()
+      .isString()
+      .withMessage(`Token must be a string`)
+      .bail()
+      .isLength({ min: 10 })
+      .withMessage(`Invalid token`),
+  ],
+  userController.verifyEmailLink,
 );
 
 export default router;

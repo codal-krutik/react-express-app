@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
       unique: true,
       lowercase: true,
       trim: true,
-      match: [/^\S+@\S+\.\S+$/, "Please use a valid email address"]
+      match: [/^\S+@\S+\.\S+$/, "Please use a valid email address"],
     },
     username: {
       type: String,
@@ -26,20 +26,20 @@ const userSchema = new mongoose.Schema<UserDocument>(
       unique: true,
       trim: true,
       minlength: [3, "Username must be at least 3 characters long"],
-      maxlength: [30, "Username cannot exceed 30 characters"]
+      maxlength: [30, "Username cannot exceed 30 characters"],
     },
     password: {
       type: String,
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters long"],
-      select: false
+      select: false,
     },
     isEmailVerified: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 userSchema.pre("save", async function () {

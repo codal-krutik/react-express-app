@@ -1,10 +1,10 @@
 import type { AuthService } from "../services/AuthService.js";
 import type { Request, Response } from "express";
 import type { AuthRequest } from "../dtos/AuthDTO.js";
-import { validationResult } from 'express-validator';
+import { validationResult } from "express-validator";
 
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   private getCookieOptions() {
     return {
@@ -61,12 +61,12 @@ export class AuthController {
       res.clearCookie("token", this.getCookieOptions());
 
       return res.status(200).json({
-        message: "Logged out successfully"
+        message: "Logged out successfully",
       });
     } catch (error: any) {
       return res.status(500).json({
-        message: error.message
+        message: error.message,
       });
     }
-  }
+  };
 }
