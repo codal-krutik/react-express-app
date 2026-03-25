@@ -1,8 +1,8 @@
 import crypto from "crypto";
 
 const OTP_LENGTH = 6;
-const OTP_EXPIRY_MINUTES = 10;
-const LINK_EXPIRY_HOURS = 24;
+const OTP_EXPIRY_MINUTES = process.env.EMAIL_VERIFICATION_EXPIRY || 10;
+const LINK_EXPIRY_HOURS = process.env.EMAIL_VERIFICATION_EXPIRY || 10;
 const TOKEN_BYTE_LENGTH = 32;
 
 /**
@@ -22,9 +22,7 @@ export function generateOtp(length: number = OTP_LENGTH): string {
 /**
  * Generate secure random token (for link-based verification)
  */
-export function generateToken(
-  byteLength: number = TOKEN_BYTE_LENGTH
-): string {
+export function generateToken(byteLength: number = TOKEN_BYTE_LENGTH): string {
   return crypto.randomBytes(byteLength).toString("hex");
 }
 
@@ -43,13 +41,6 @@ export function getExpiryInMinutes(minutes: number): Date {
 }
 
 /**
- * Calculate expiry date in hours
- */
-export function getExpiryInHours(hours: number): Date {
-  return new Date(Date.now() + hours * 60 * 60 * 1000);
-}
-
-/**
  * OTP verification payload generator
  */
 export function createOtpPayload() {
@@ -59,7 +50,7 @@ export function createOtpPayload() {
   return {
     otp,
     otpHash,
-    expiresAt: getExpiryInMinutes(OTP_EXPIRY_MINUTES),
+    expiresAt: getExpiryInMinutes(OTP_EXPIRY_MINUTES as number),
     type: "OTP" as const,
   };
 }
@@ -72,9 +63,9 @@ export function createLinkPayload() {
   const tokenHash = hashValue(token);
 
   return {
-    token, // send in email link
-    tokenHash, // store in DB
-    expiresAt: getExpiryInHours(LINK_EXPIRY_HOURS),
+    token,
+    tokenHash,
+    expiresAt: getExpiryInMinutes(LINK_EXPIRY_HOURS as number),
     type: "LINK" as const,
   };
 }

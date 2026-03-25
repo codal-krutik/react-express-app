@@ -1,4 +1,4 @@
-import type { Route } from "../+types/account.login";
+import type { Route } from "./+types/login";
 import {
   Box,
   Button,
@@ -32,6 +32,9 @@ export default function LoginPage() {
     password: "",
   });
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
       ...form,
@@ -62,27 +65,23 @@ export default function LoginPage() {
     return valid;
   };
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const isValid = validateForm();
-    if (!isValid) return;
+    if (!validateForm()) return;
 
     try {
-      const { data } = await axios.post("http://localhost:3000/api/auth/login", form, {
-        withCredentials: true,
-      });
+      const { data } = await axios.post(
+        "http://localhost:3000/api/auth/login",
+        form,
+        { withCredentials: true }
+      );
 
       dispatch(setAuthenticatedUser(data.data));
-      
-      navigate('/');
+      navigate("/");
     } catch (error: any) {
-      if (error.response && error.response.data?.errors) {
+      if (error.response?.data?.errors) {
         const backendErrors = error.response.data.errors;
-
         const newErrors = { emailOrUsername: "", password: "" };
 
         backendErrors.forEach((err: any) => {
@@ -93,23 +92,37 @@ export default function LoginPage() {
 
         setErrors(newErrors);
       } else {
-        console.error("Unexpected error:", error);
+        console.error(error);
       }
     }
   };
 
   return (
     <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-      bgcolor="#f5f5f5"
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(135deg, #f5f7fa, #e4ecf7)",
+      }}
     >
-      <Paper elevation={3} sx={{ padding: 4, width: 350 }}>
-        <Typography variant="h5" mb={2} textAlign="center">
-          Login
-        </Typography>
+      <Paper
+        elevation={4}
+        sx={{
+          p: 4,
+          width: 360,
+          borderRadius: 3,
+        }}
+      >
+        <Box textAlign="center" mb={3}>
+          <Typography variant="h5" fontWeight={600}>
+            Welcome Back
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Login to your account
+          </Typography>
+        </Box>
 
         <Box component="form" onSubmit={handleSubmit}>
           <FormControl fullWidth margin="normal" error={!!errors.emailOrUsername}>
@@ -119,6 +132,7 @@ export default function LoginPage() {
               value={form.emailOrUsername}
               onChange={handleChange}
               fullWidth
+              size="small"
             />
             {errors.emailOrUsername && (
               <FormHelperText>{errors.emailOrUsername}</FormHelperText>
@@ -133,14 +147,48 @@ export default function LoginPage() {
               value={form.password}
               onChange={handleChange}
               fullWidth
+              size="small"
             />
             {errors.password && (
               <FormHelperText>{errors.password}</FormHelperText>
             )}
           </FormControl>
 
-          <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
+          <Button
+            fullWidth
+            variant="contained"
+            type="submit"
+            sx={{
+              mt: 2,
+              py: 1.2,
+              borderRadius: 2,
+              textTransform: "none",
+              fontWeight: 600,
+            }}
+          >
             Login
+          </Button>
+
+          <Typography
+            variant="body2"
+            textAlign="center"
+            sx={{ my: 2, color: "text.secondary" }}
+          >
+            OR
+          </Typography>
+
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{
+              py: 1.2,
+              borderRadius: 2,
+              textTransform: "none",
+              fontWeight: 500,
+            }}
+            onClick={() => navigate("/account/register")}
+          >
+            Create an account
           </Button>
         </Box>
       </Paper>

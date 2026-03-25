@@ -1,4 +1,4 @@
-import type { Route } from "../+types/account.register";
+import type { Route } from "./+types/register";
 import {
   Box,
   Button,
@@ -32,6 +32,8 @@ export default function RegisterPage() {
     password: "",
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
       ...form,
@@ -48,7 +50,6 @@ export default function RegisterPage() {
     let valid = true;
     const newErrors = { email: "", username: "", password: "" };
 
-    // Basic email validation
     if (!form.email) {
       newErrors.email = "Email is required";
       valid = false;
@@ -57,18 +58,16 @@ export default function RegisterPage() {
       valid = false;
     }
 
-    // Username validation
     if (!form.username) {
       newErrors.username = "Username is required";
       valid = false;
     }
 
-    // Password validation
     if (!form.password) {
       newErrors.password = "Password is required";
       valid = false;
     } else if (form.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = "Minimum 6 characters required";
       valid = false;
     }
 
@@ -76,21 +75,19 @@ export default function RegisterPage() {
     return valid;
   };
 
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const isValid = validateForm();
-    if (!isValid) return;
+    if (!validateForm()) return;
 
     try {
       await axios.post("http://localhost:3000/api/user/register", form, {
         withCredentials: true,
       });
-      navigate(`/account/verify-otp?email=${encodeURIComponent(form.email)}`);
+
+      navigate("/");
     } catch (error: any) {
-      if (error.response && error.response.data?.errors) {
+      if (error.response?.data?.errors) {
         const backendErrors = error.response.data.errors;
 
         const newErrors = { email: "", username: "", password: "" };
@@ -103,23 +100,37 @@ export default function RegisterPage() {
 
         setErrors(newErrors);
       } else {
-        console.error("Unexpected error:", error);
+        console.error(error);
       }
     }
   };
 
   return (
     <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-      bgcolor="#f5f5f5"
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(135deg, #f5f7fa, #e4ecf7)",
+      }}
     >
-      <Paper elevation={3} sx={{ padding: 4, width: 350 }}>
-        <Typography variant="h5" mb={2} textAlign="center">
-          Register
-        </Typography>
+      <Paper
+        elevation={4}
+        sx={{
+          p: 4,
+          width: 380,
+          borderRadius: 3,
+        }}
+      >
+        <Box textAlign="center" mb={3}>
+          <Typography variant="h5" fontWeight={600}>
+            Create Account
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Sign up to get started
+          </Typography>
+        </Box>
 
         <Box component="form" onSubmit={handleSubmit}>
           <FormControl fullWidth margin="normal" error={!!errors.email}>
@@ -130,6 +141,7 @@ export default function RegisterPage() {
               value={form.email}
               onChange={handleChange}
               fullWidth
+              size="small"
             />
             {errors.email && <FormHelperText>{errors.email}</FormHelperText>}
           </FormControl>
@@ -141,8 +153,11 @@ export default function RegisterPage() {
               value={form.username}
               onChange={handleChange}
               fullWidth
+              size="small"
             />
-            {errors.username && <FormHelperText>{errors.username}</FormHelperText>}
+            {errors.username && (
+              <FormHelperText>{errors.username}</FormHelperText>
+            )}
           </FormControl>
 
           <FormControl fullWidth margin="normal" error={!!errors.password}>
@@ -153,17 +168,48 @@ export default function RegisterPage() {
               value={form.password}
               onChange={handleChange}
               fullWidth
+              size="small"
             />
-            {errors.password && <FormHelperText>{errors.password}</FormHelperText>}
+            {errors.password && (
+              <FormHelperText>{errors.password}</FormHelperText>
+            )}
           </FormControl>
 
           <Button
             fullWidth
             variant="contained"
             type="submit"
-            sx={{ mt: 2 }}
+            sx={{
+              mt: 2,
+              py: 1.2,
+              borderRadius: 2,
+              textTransform: "none",
+              fontWeight: 600,
+            }}
           >
             Register
+          </Button>
+
+          <Typography
+            variant="body2"
+            textAlign="center"
+            sx={{ my: 2, color: "text.secondary" }}
+          >
+            Already have an account?
+          </Typography>
+
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{
+              py: 1.2,
+              borderRadius: 2,
+              textTransform: "none",
+              fontWeight: 500,
+            }}
+            onClick={() => navigate("/account/login")}
+          >
+            Login
           </Button>
         </Box>
       </Paper>

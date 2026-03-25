@@ -71,7 +71,9 @@ export class UserController {
     try {
       if (this.handleValidation(req, res)) return;
 
-      const data = await this.userService.verifyEmailLink(req.body);
+      const token = req.query.token as string;
+
+      const data = await this.userService.verifyEmailLink(token);
       return res.status(200).json({
         success: true,
         data,
@@ -85,6 +87,63 @@ export class UserController {
           errors: error.errors,
         });
       }
+
+      return res.status(500).json({
+        success: false,
+        message: error.message || "Internal server error",
+      });
+    }
+  };
+
+  resendVerificationLink = async (req: Request, res: Response) => {
+    try {
+      if (this.handleValidation(req, res)) return;
+
+      const { email } = req.body;
+
+      const data = await this.userService.resendVerificationLink(email);
+
+      return res.status(200).json({
+        success: true,
+        message: data.message,
+      });
+    } catch (error: any) {
+      if (error.type === "validation") {
+        return res.status(400).json({
+          success: false,
+          message: error.errors[0]?.msg || "Validation failed",
+          errors: error.errors,
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        message: error.message || "Internal server error",
+      });
+    }
+  };
+
+  resendOtp = async (req: Request, res: Response) => {
+    try {
+      if (this.handleValidation(req, res)) return;
+
+      const { email } = req.body;
+
+      const data = await this.userService.resendOtp(email);
+
+      return res.status(200).json({
+        success: true,
+        message: data.message,
+      });
+    } catch (error: any) {
+      if (error.type === "validation") {
+        return res.status(400).json({
+          success: false,
+          message: "Validation failed",
+          errors: error.errors,
+        });
+      }
+
       return res.status(500).json({
         success: false,
         message: error.message || "Internal server error",

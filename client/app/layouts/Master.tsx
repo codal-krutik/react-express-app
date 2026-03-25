@@ -9,7 +9,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   try {
     const cookie = request.headers.get("cookie") ?? "";
 
-    const { data } = await axios.get("http://localhost:3000/api/auth/authenticate", {
+    const { data } = await axios.get("http://localhost:3000/api/authenticate", {
       withCredentials: true,
       headers: {
         cookie

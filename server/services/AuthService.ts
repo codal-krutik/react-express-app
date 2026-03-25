@@ -56,6 +56,7 @@ export class AuthService implements AuthServiceInterface {
           id: user._id.toString(),
           email: user.email,
           username: user.username,
+          isEmailVerified: user.isEmailVerified,
         },
         token,
       };

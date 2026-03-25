@@ -27,6 +27,7 @@ export class AuthController {
           id: user._id.toString(),
           email: user.email,
           username: user.username,
+          isEmailVerified: user.isEmailVerified
         },
       });
     } catch (error: any) {

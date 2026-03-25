@@ -34,34 +34,4 @@ router.post(
   userController.register,
 );
 
-router.post(
-  "/verify-otp",
-  [
-    body("email").isEmail().withMessage("Please provide a valid email address").normalizeEmail(),
-    body("otp")
-      .trim()
-      .notEmpty()
-      .withMessage("OTP is required")
-      .isLength({ min: 6, max: 6 })
-      .withMessage("OTP must be 6 digits"),
-  ],
-  userController.verifyEmailOtp,
-);
-
-router.get(
-  "/verify-email",
-  [
-    query("token")
-      .exists({ checkFalsy: true })
-      .withMessage(`Token is required`)
-      .bail()
-      .isString()
-      .withMessage(`Token must be a string`)
-      .bail()
-      .isLength({ min: 10 })
-      .withMessage(`Invalid token`),
-  ],
-  userController.verifyEmailLink,
-);
-
 export default router;
