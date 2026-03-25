@@ -16,7 +16,7 @@ export async function loader({ request }: Route.LoaderArgs) {
       }
     });
 
-    return data;
+    return data.data;
   } catch (error: any) {
     if (error.response?.status === 401) {
       throw redirect("/account/login");

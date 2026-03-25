@@ -42,7 +42,7 @@ export default function VerifyOtpPage() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:3000/api/user/verify-email-otp", form);
+      await axios.post("http://localhost:3000/api/user/verify-otp", form);
       navigate("/account/login");
     } catch (error: any) {
       if (error.response && error.response.data?.errors) {

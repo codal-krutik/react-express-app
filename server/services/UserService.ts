@@ -1,6 +1,6 @@
 import type { UserServiceInterface } from "../interfaces/service/UserServiceInterface.js";
 import type { UserDocument } from "../models/User.js";
-import type { EmailVerificationRepository } from "../repositories/EmailVerificationRepository.js";
+import { EmailVerificationRepository } from "../repositories/EmailVerificationRepository.js";
 import { UserRepository } from "../repositories/UserRepository.js";
 import { createOtpPayload, createLinkPayload, hashValue } from "../utils/verification.js";
 import { transporter } from "../utils/transport.js";

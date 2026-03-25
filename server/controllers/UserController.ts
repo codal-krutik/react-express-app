@@ -21,13 +21,24 @@ export class UserController {
     try {
       if (this.handleValidation(req, res)) return;
 
-      const user = await this.userService.register(req.body);
-      return res.status(201).json(user);
+      const data = await this.userService.register(req.body);
+      return res.status(201).json({
+        success: true,
+        data,
+        message: "User registerd",
+      });
     } catch (error: any) {
       if (error.type === "validation") {
-        return res.status(400).json({ errors: error.errors });
+        return res.status(400).json({
+          success: false,
+          message: "Validation failed",
+          errors: error.errors,
+        });
       }
-      return res.status(500).json({ message: error.message });
+      return res.status(500).json({
+        success: false,
+        message: error.message || "Internal server error",
+      });
     }
   };
 
@@ -35,13 +46,24 @@ export class UserController {
     try {
       if (this.handleValidation(req, res)) return;
 
-      const response = await this.userService.verifyEmailOtp(req.body);
-      return res.status(200).json(response);
+      const data = await this.userService.verifyEmailOtp(req.body);
+      return res.status(200).json({
+        success: true,
+        data,
+        message: "OTP verified successfully",
+      });
     } catch (error: any) {
       if (error.type === "validation") {
-        return res.status(400).json({ errors: error.errors });
+        return res.status(400).json({
+          success: false,
+          message: "Validation failed",
+          errors: error.errors,
+        });
       }
-      return res.status(500).json({ message: error.message });
+      return res.status(500).json({
+        success: false,
+        message: error.message || "Internal server error",
+      });
     }
   };
 
@@ -49,13 +71,24 @@ export class UserController {
     try {
       if (this.handleValidation(req, res)) return;
 
-      const response = await this.userService.verifyEmailLink(req.body);
-      return res.status(200).json(response);
+      const data = await this.userService.verifyEmailLink(req.body);
+      return res.status(200).json({
+        success: true,
+        data,
+        message: "Email verified successfully",
+      });
     } catch (error: any) {
       if (error.type === "validation") {
-        return res.status(400).json({ errors: error.errors });
+        return res.status(400).json({
+          success: false,
+          message: "Validation failed",
+          errors: error.errors,
+        });
       }
-      return res.status(500).json({ message: error.message });
+      return res.status(500).json({
+        success: false,
+        message: error.message || "Internal server error",
+      });
     }
   };
 }

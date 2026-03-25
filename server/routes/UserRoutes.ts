@@ -3,12 +3,12 @@ import { UserController } from "../controllers/UserController.js";
 import { UserService } from "../services/UserService.js";
 import { UserRepository } from "../repositories/UserRepository.js";
 import { body, query } from "express-validator";
-import { EmailVerification } from "../models/EmailVerification.js";
+import { EmailVerificationRepository } from "../repositories/EmailVerificationRepository.js";
 
 const router = Router();
 
 const userRepository = new UserRepository();
-const emailVerificationRepository = new EmailVerification();
+const emailVerificationRepository = new EmailVerificationRepository();
 const userService = new UserService(userRepository, emailVerificationRepository);
 const userController = new UserController(userService);
 

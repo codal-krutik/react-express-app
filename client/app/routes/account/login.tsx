@@ -75,7 +75,9 @@ export default function LoginPage() {
       const { data } = await axios.post("http://localhost:3000/api/auth/login", form, {
         withCredentials: true,
       });
-      dispatch(setAuthenticatedUser(data));
+
+      dispatch(setAuthenticatedUser(data.data));
+      
       navigate('/');
     } catch (error: any) {
       if (error.response && error.response.data?.errors) {
