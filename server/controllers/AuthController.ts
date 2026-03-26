@@ -4,7 +4,9 @@ import type { AuthRequest } from "../dtos/AuthDTO.js";
 import { validationResult } from "express-validator";
 
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+  ) {}
 
   private getCookieOptions() {
     return {
@@ -13,6 +15,18 @@ export class AuthController {
       sameSite: "strict" as const,
       path: "/",
     };
+  }
+
+  private handleValidation(req: Request, res: Response): boolean {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({
+        success: false,
+        errors: errors.array(),
+      });
+      return true;
+    }
+    return false;
   }
 
   authenticate = async (req: AuthRequest, res: Response) => {
@@ -27,10 +41,35 @@ export class AuthController {
           id: user._id.toString(),
           email: user.email,
           username: user.username,
-          isEmailVerified: user.isEmailVerified
+          isEmailVerified: user.isEmailVerified,
         },
       });
     } catch (error: any) {
+      return res.status(500).json({
+        success: false,
+        message: error.message || "Internal server error",
+      });
+    }
+  };
+
+  register = async (req: Request, res: Response) => {
+    try {
+      if (this.handleValidation(req, res)) return;
+
+      const data = await this.authService.register(req.body);
+      return res.status(201).json({
+        success: true,
+        data,
+        message: "User registerd",
+      });
+    } catch (error: any) {
+      if (error.type === "validation") {
+        return res.status(400).json({
+          success: false,
+          message: "Validation failed",
+          errors: error.errors,
+        });
+      }
       return res.status(500).json({
         success: false,
         message: error.message || "Internal server error",

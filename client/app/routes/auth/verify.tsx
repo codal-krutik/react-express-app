@@ -1,4 +1,4 @@
-import type { Route } from "./+types/verify";
+import type { Route } from "../account/+types/verify";
 import { useLoaderData, useNavigate } from "react-router";
 import { Box, Paper, Typography, Button } from "@mui/material";
 import axios from "axios";
@@ -15,9 +15,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   try {
-    const { data } = await axios.get(
-      `http://localhost:3000/api/user/verify-email-link?token=${token}`
-    );
+    const { data } = await axios.post(`http://localhost:3000/api/verification/verify`, { token, type: "LINK" });
 
     return {
       success: true,
@@ -26,17 +24,11 @@ export async function loader({ request }: Route.LoaderArgs) {
   } catch (error: any) {
     const response = error.response?.data;
 
-    const validationError =
-      response?.errors && response.errors.length > 0
-        ? response.errors[0]
-        : null;
+    const validationError = response?.errors && response.errors.length > 0 ? response.errors[0] : null;
 
     return {
       success: false,
-      message:
-        validationError?.msg ||
-        response?.message ||
-        "Verification failed or link expired",
+      message: validationError?.msg || response?.message || "Verification failed or link expired",
     };
   }
 }
@@ -54,10 +46,7 @@ export default function AccountVerifyPage() {
         background: "linear-gradient(135deg, #f5f7fa, #e4ecf7)",
       }}
     >
-      <Paper
-        elevation={4}
-        sx={{ p: 4, width: 360, textAlign: "center", borderRadius: 3 }}
-      >
+      <Paper elevation={4} sx={{ p: 4, width: 360, textAlign: "center", borderRadius: 3 }}>
         <Typography variant="h5" fontWeight={600} gutterBottom>
           {success ? "🎉 Success" : "❌ Verification Failed"}
         </Typography>

@@ -97,8 +97,11 @@ export default function Index() {
                     onClick={async () => {
                       try {
                         await axios.post(
-                          "http://localhost:3000/api/user/resend-verification-link",
-                          {},
+                          "http://localhost:3000/api/verification/send",
+                          {
+                            email: user.email,
+                            type: "LINK"
+                          },
                           { withCredentials: true }
                         );
                       } catch (error) {

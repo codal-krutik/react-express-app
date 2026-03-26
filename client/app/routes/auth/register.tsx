@@ -1,4 +1,4 @@
-import type { Route } from "./+types/register";
+import type { Route } from "../account/+types/register";
 import {
   Box,
   Button,
@@ -81,7 +81,7 @@ export default function RegisterPage() {
     if (!validateForm()) return;
 
     try {
-      await axios.post("http://localhost:3000/api/user/register", form, {
+      await axios.post("http://localhost:3000/api/auth/register", form, {
         withCredentials: true,
       });
 

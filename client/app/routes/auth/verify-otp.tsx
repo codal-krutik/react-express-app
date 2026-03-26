@@ -1,4 +1,4 @@
-import type { Route } from "./+types/verify-otp";
+import type { Route } from "../account/+types/verify-otp";
 import {
   Box,
   Button,

@@ -3,5 +3,6 @@ import type { UserDocument } from "../../models/User.js";
 
 export interface AuthServiceInterface {
   authenticate(userId: string): Promise<UserDocument>;
+  register(data: UserDocument): Promise<UserDocument>;
   login(data: LoginDTO): Promise<LoginResponseDTO>;
 }

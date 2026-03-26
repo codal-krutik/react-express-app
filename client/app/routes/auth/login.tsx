@@ -1,4 +1,4 @@
-import type { Route } from "./+types/login";
+import type { Route } from "../account/+types/login";
 import {
   Box,
   Button,
