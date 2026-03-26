@@ -112,7 +112,6 @@ export default function RegisterPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(135deg, #f5f7fa, #e4ecf7)",
       }}
     >
       <Paper

@@ -1,24 +1,12 @@
 import type { Route } from "./+types/_index";
-import {
-  Box,
-  Button,
-  Typography,
-  AppBar,
-  Toolbar,
-  Container,
-  Stack,
-  Alert,
-} from "@mui/material";
+import { Box, Button, Typography, AppBar, Toolbar, Container, Stack, Alert } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { unsetAuthenticatedUser } from "~/store/authSlice";
 import axios from "axios";
 
-export function meta({ }: Route.MetaArgs) {
-  return [
-    { title: "Home" },
-    { name: "description", content: "Dashboard" },
-  ];
+export function meta({}: Route.MetaArgs) {
+  return [{ title: "Home" }, { name: "description", content: "Dashboard" }];
 }
 
 export default function Index() {
@@ -29,11 +17,7 @@ export default function Index() {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "http://localhost:3000/api/auth/logout",
-        {},
-        { withCredentials: true }
-      );
+      await axios.post("http://localhost:3000/api/auth/logout", {}, { withCredentials: true });
 
       dispatch(unsetAuthenticatedUser());
       navigate("/account/login");
@@ -43,7 +27,7 @@ export default function Index() {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "#f9fafb" }}>
+    <Box sx={{ minHeight: "100vh" }}>
       <AppBar position="static" elevation={1} color="inherit">
         <Toolbar sx={{ justifyContent: "space-between" }}>
           <Typography variant="h6" fontWeight={600}>
@@ -51,20 +35,11 @@ export default function Index() {
           </Typography>
 
           <Stack direction="row" spacing={2}>
-            <Button
-              variant="text"
-              onClick={() => navigate("/account")}
-              sx={{ textTransform: "none", fontWeight: 500 }}
-            >
+            <Button variant="text" onClick={() => navigate("/account")} sx={{ textTransform: "none", fontWeight: 500 }}>
               Account
             </Button>
 
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={handleLogout}
-              sx={{ textTransform: "none" }}
-            >
+            <Button variant="outlined" color="error" onClick={handleLogout} sx={{ textTransform: "none" }}>
               Logout
             </Button>
           </Stack>
@@ -81,11 +56,17 @@ export default function Index() {
                   <Button
                     size="small"
                     variant="contained"
-                    onClick={() =>
-                      navigate(
-                        `/account/verify-otp?email=${encodeURIComponent(user.email)}`
-                      )
-                    }
+                    onClick={async () => {
+                      await axios.post(
+                        "http://localhost:3000/api/verification/send",
+                        {
+                          email: user.email,
+                          type: "OTP",
+                        },
+                        { withCredentials: true },
+                      );
+                      navigate(`/account/verify?email=${encodeURIComponent(user.email)}`);
+                    }}
                     sx={{ textTransform: "none" }}
                   >
                     Verify OTP
@@ -100,9 +81,9 @@ export default function Index() {
                           "http://localhost:3000/api/verification/send",
                           {
                             email: user.email,
-                            type: "LINK"
+                            type: "LINK",
                           },
-                          { withCredentials: true }
+                          { withCredentials: true },
                         );
                       } catch (error) {
                         console.error(error);
