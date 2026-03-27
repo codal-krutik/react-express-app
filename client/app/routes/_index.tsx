@@ -101,7 +101,7 @@ export default function Index() {
           </Box>
         )}
 
-        <Typography variant="h4" fontWeight={600} gutterBottom>
+        <Typography variant="h4" fontWeight={600} sx={{ my: 2 }}>
           Welcome 👋
         </Typography>
 

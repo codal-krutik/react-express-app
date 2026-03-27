@@ -1,13 +1,13 @@
 import type { LoginDTO, LoginResponseDTO } from "../dtos/AuthDTO.js";
+import type { UserRepositoryInterface } from "../interfaces/repository/UserRepositoryInterface.js";
 import type { AuthServiceInterface } from "../interfaces/service/AuthServiceInterface.js";
 import type { UserDocument } from "../models/User.js";
-import { UserRepository } from "../repositories/UserRepository.js";
 import { sign } from "../utils/jwt.js";
 import type { VerificationService } from "./VerificationService.js";
 
 export class AuthService implements AuthServiceInterface {
   constructor(
-    private userRepository: UserRepository,
+    private userRepository: UserRepositoryInterface,
     private verificationService: VerificationService,
   ) {}
 

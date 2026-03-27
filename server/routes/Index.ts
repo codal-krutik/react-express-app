@@ -1,6 +1,7 @@
 import { Router } from "express";
 import AuthRoutes from "./AuthRoutes.js";
 import VerificationRoutes from "./VerificationRoutes.js";
+import ProductRoutes from "./ProductRoutes.js";
 import { authMiddleware } from "../middleware/AuthMiddleware.js";
 import { AuthController } from "../controllers/AuthController.js";
 import { UserRepository } from "../repositories/UserRepository.js";
@@ -22,5 +23,7 @@ router.get("/authenticate", authMiddleware, authController.authenticate);
 
 router.use("/auth", AuthRoutes);
 router.use("/verification", VerificationRoutes);
+
+router.use("/products", ProductRoutes);
 
 export default router;

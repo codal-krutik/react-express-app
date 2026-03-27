@@ -13,6 +13,7 @@
     "maildev": "maildev --smtp 1025 --web 1080"
   },
   "dependencies": {
+    "@shopify/graphql-client": "^1.4.2",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",

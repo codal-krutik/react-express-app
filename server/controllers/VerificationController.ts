@@ -1,8 +1,8 @@
-import { VerificationService } from "../services/VerificationService.js";
+import type { VerificationServiceInterface } from "../interfaces/service/VerificationServiceInterface.js";
 import type { Request, Response } from "express";
 
 export class VerificationController {
-  constructor(private verificationService: VerificationService) {}
+  constructor(private verificationService: VerificationServiceInterface) {}
 
   send = async (req: Request, res: Response) => {
     try {

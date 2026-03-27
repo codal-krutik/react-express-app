@@ -1,5 +1,5 @@
-import { UserRepository } from "../repositories/UserRepository.js";
-import { EmailVerificationRepository } from "../repositories/EmailVerificationRepository.js";
+import type { UserRepositoryInterface } from "../interfaces/repository/UserRepositoryInterface.js";
+import type { EmailVerificationRepositoryInterface } from "../interfaces/repository/EmailVerificationRepositoryInterface.js";
 import { createLinkPayload, createOtpPayload, hashValue } from "../utils/verification.js";
 import { transporter } from "../utils/transport.js";
 import type { VerificationServiceInterface } from "../interfaces/service/VerificationServiceInterface.js";
@@ -8,8 +8,8 @@ import type { SendType } from "../dtos/VerificationDTO.js";
 
 export class VerificationService implements VerificationServiceInterface {
   constructor(
-    private userRepository: UserRepository,
-    private emailVerificationRepository: EmailVerificationRepository,
+    private userRepository: UserRepositoryInterface,
+    private emailVerificationRepository: EmailVerificationRepositoryInterface,
   ) {}
 
   private async sendEmail(user: UserDocument, token: string, type: SendType): Promise<void> {

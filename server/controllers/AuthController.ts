@@ -1,11 +1,11 @@
-import type { AuthService } from "../services/AuthService.js";
+import type { AuthServiceInterface } from "../interfaces/service/AuthServiceInterface.js";
 import type { Request, Response } from "express";
 import type { AuthRequest } from "../dtos/AuthDTO.js";
 import { validationResult } from "express-validator";
 
 export class AuthController {
   constructor(
-    private authService: AuthService,
+    private authService: AuthServiceInterface,
   ) {}
 
   private getCookieOptions() {

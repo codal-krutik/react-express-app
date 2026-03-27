@@ -21,7 +21,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     if (error.response?.status === 401) {
       throw redirect("/account/login");
     }
-    throw error;
+    throw new Response("Something went wrong", { status: 500 });
   }
 }
 
