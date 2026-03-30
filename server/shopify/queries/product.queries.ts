@@ -1,7 +1,18 @@
 export const GET_PRODUCTS = `
-  query GetProducts($first: Int!) {
-    products(first: $first) {
+  query GetProducts(
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+  ) {
+    products(
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+    ) {
       edges {
+        cursor
         node {
           id
           title
@@ -14,6 +25,12 @@ export const GET_PRODUCTS = `
             }
           }
         }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
       }
     }
   }

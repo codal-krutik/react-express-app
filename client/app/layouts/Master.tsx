@@ -12,8 +12,8 @@ export async function loader({ request }: Route.LoaderArgs) {
     const { data } = await axios.get("http://localhost:3000/api/authenticate", {
       withCredentials: true,
       headers: {
-        cookie
-      }
+        cookie,
+      },
     });
 
     return data.data;

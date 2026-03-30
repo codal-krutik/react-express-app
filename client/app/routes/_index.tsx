@@ -1,52 +1,22 @@
 import type { Route } from "./+types/_index";
 import { Box, Button, Typography, AppBar, Toolbar, Container, Stack, Alert } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { unsetAuthenticatedUser } from "~/store/authSlice";
 import axios from "axios";
+import React from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Home" }, { name: "description", content: "Dashboard" }];
 }
 
 export default function Index() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const user = useSelector((state: any) => state.auth.user);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post("http://localhost:3000/api/auth/logout", {}, { withCredentials: true });
-
-      dispatch(unsetAuthenticatedUser());
-      navigate("/account/login");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
-    <Box sx={{ minHeight: "100vh" }}>
-      <AppBar position="static" elevation={1} color="inherit">
-        <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Typography variant="h6" fontWeight={600}>
-            React express app
-          </Typography>
-
-          <Stack direction="row" spacing={2}>
-            <Button variant="text" onClick={() => navigate("/account")} sx={{ textTransform: "none", fontWeight: 500 }}>
-              Account
-            </Button>
-
-            <Button variant="outlined" color="error" onClick={handleLogout} sx={{ textTransform: "none" }}>
-              Logout
-            </Button>
-          </Stack>
-        </Toolbar>
-      </AppBar>
-
-      <Container>
+    <React.Fragment>
+      <Container maxWidth={"xl"}>
         {user && !user.isEmailVerified && (
           <Box sx={{ py: 2 }}>
             <Alert
@@ -109,6 +79,6 @@ export default function Index() {
           You are successfully logged in.
         </Typography>
       </Container>
-    </Box>
+    </React.Fragment>
   );
 }
